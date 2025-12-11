@@ -12,66 +12,57 @@
       {
         "id": "d002",
         "question": "How do you print something in Dart?",
-        "answer": "Use print("Hello");",
+        "answer": "Use print(\"Hello\");",
         "isMastered": false
       },
-      
       {
         "id": "d003",
         "question": "What is a variable?",
-        "answer": "A variable stores data. Example: var name = "John";",
+        "answer": "A variable stores data. Example: var name = \"John\";",
         "isMastered": false
       },
-
       {
         "id": "d004",
         "question": "What are the main data types in Dart?",
         "answer": "int, double, String, bool, List.",
         "isMastered": false
       },
-
-        {
-            "id": "d005",
-            "question": "Difference between var and final?",
-            "answer": "var → value can change, final → value cannot change.",
-            "isMastered": false
-        },
-
-        {
-            "id": "d006",
-            "question": "What is String interpolation?",
-            "answer": "Inserting variables inside a string. Example: "Hi $name"",
-            "isMastered": false
-        },
-
-        {
-            "id": "d007",
-            "question": "How do you create a list?",
-            "answer": "List<int> nums = [1, 2, 3];",
-            "isMastered": false
-        },
-
-        {
-            "id": "d008",
-            "question": "What is a function?",
-            "answer": "A block of code that performs a task. Example: void greet() { print("Hi"); }",
-            "isMastered": false
-        },
-
-        {
-            "id": "d009",
-            "question": "What is null in Dart?",
-            "answer": "null means “no value.”, Example: String? name; → this can be null.",
-            "isMastered": false
-        },
-
-        {
-            "id": "d010",
-            "question": "What is a class in Dart?",
-            "answer": "A class is a blueprint for creating objects.",
-            "isMastered": false
-        }
-
+      {
+        "id": "d005",
+        "question": "Difference between var and final?",
+        "answer": "var → value can change, final → value cannot change.",
+        "isMastered": false
+      },
+      {
+        "id": "d006",
+        "question": "What is String interpolation?",
+        "answer": "Inserting variables inside a string. Example: \"Hi \$name\"",
+        "isMastered": false
+      },
+      {
+        "id": "d007",
+        "question": "How do you create a list?",
+        "answer": "List<int> nums = [1, 2, 3];",
+        "isMastered": false
+      },
+      {
+        "id": "d008",
+        "question": "What is a function?",
+        "answer": "A block of code that performs a task. Example: void greet() { print(\"Hi\"); }",
+        "isMastered": false
+      },
+      {
+        "id": "d009",
+        "question": "What is null in Dart?",
+        "answer": "null means no value. Example: String? name; → this can be null.",
+        "isMastered": false
+      },
+      {
+        "id": "d010",
+        "question": "What is a class in Dart?",
+        "answer": "A class is a blueprint for creating objects.",
+        "isMastered": false
+      }
     ]
   }
 ]
