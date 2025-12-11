@@ -36,7 +36,7 @@
       {
         "id": "d006",
         "question": "What is String interpolation?",
-        "answer": "Inserting variables inside a string. Example: \"Hi \$name\"",
+        "answer": "Inserting variables inside a string.",
         "isMastered": false
       },
       {
