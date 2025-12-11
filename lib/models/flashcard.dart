@@ -11,8 +11,7 @@ class Flashcard {
     required this.isMastered,
   });
 
-
-  Flashcard.fromJson(Map<String, dynamic> json) {
+  factory Flashcard.fromJson(Map<String, dynamic> json) {
     return Flashcard(
       id: json['id'] as String,
       question: json['question'] as String,
