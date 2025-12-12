@@ -1,22 +1,22 @@
 // lib/state/deck_state.dart
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';       // 🔥 NEW: Hive for persistence
 import '../services/deck_service.dart';
 import '../models/flashcard.dart';
 
-// ✅ 1. Callback type
+// 1. Callback type
 typedef SessionEndCallback = void Function();
 
 class DeckState extends ChangeNotifier {
-  final StudyDeck _deck; 
+  final StudyDeck _deck;
   int _currentCardIndex = 0;
 
-  // Cards to review
   List<Flashcard> _cardsToReview = [];
 
-  // ✅ 2. Callback for session end
+  // Callback for session end
   final SessionEndCallback onSessionEnd;
 
-  // ✅ 3. Updated constructor — callback is required
+  // Constructor
   DeckState(this._deck, {required this.onSessionEnd}) {
     _cardsToReview = List.from(_deck.cards);
   }
@@ -28,26 +28,49 @@ class DeckState extends ChangeNotifier {
   Flashcard get currentCard => _cardsToReview[_currentCardIndex];
   bool get isLastCard => _currentCardIndex == _cardsToReview.length - 1;
 
-  // ✅ 4. Updated next card logic
+  // ----------------------------------------------------------
+  // 🔥 SAVE CARD STATUS TO HIVE
+  // ----------------------------------------------------------
+  Future<void> _saveCardStatus(Flashcard card) async {
+    final box = await Hive.openBox<Flashcard>('mastery_status');
+    await box.put(card.id, card);
+  }
+
+  // ----------------------------------------------------------
+  // Move to next card
+  // ----------------------------------------------------------
   void moveToNextCard() {
     if (!isLastCard) {
       _currentCardIndex++;
       notifyListeners();
     } else {
-      // 🔥 Trigger the end-of-session callback
       onSessionEnd();
     }
   }
 
-  // Mastered
+  // ----------------------------------------------------------
+  // Mark as Mastered
+  // ----------------------------------------------------------
   void markAsMastered() {
     final masteredCard = currentCard.copyWith(isMastered: true);
     _cardsToReview[_currentCardIndex] = masteredCard;
+
+    // 🔥 SAVE TO HIVE
+    _saveCardStatus(masteredCard);
+
     moveToNextCard();
   }
 
-  // Need review
+  // ----------------------------------------------------------
+  // Mark for Review
+  // ----------------------------------------------------------
   void markForReview() {
+    final reviewedCard = currentCard.copyWith(isMastered: false);
+    _cardsToReview[_currentCardIndex] = reviewedCard;
+
+    // 🔥 SAVE TO HIVE
+    _saveCardStatus(reviewedCard);
+
     moveToNextCard();
   }
 }
