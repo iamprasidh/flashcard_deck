@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/deck_service.dart';
-import 'study_session_screen.dart'; // make sure this import exists
+import 'study_session_screen.dart';
+import 'package:provider/provider.dart';
+import '../state/deck_state.dart'; // adjust import if needed
 
 class DeckSelectionScreen extends StatelessWidget {
   const DeckSelectionScreen({super.key});
@@ -26,7 +28,7 @@ class DeckSelectionScreen extends StatelessWidget {
             );
           }
 
-          final List<StudyDeck>? decks = snapshot.data;
+          final decks = snapshot.data;
 
           if (decks == null || decks.isEmpty) {
             return const Center(
@@ -47,8 +49,10 @@ class DeckSelectionScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            StudySessionScreen(deck: deck),
+                        builder: (context) => ChangeNotifierProvider(
+                          create: (context) => DeckState(deck),
+                          child: const StudySessionScreen(),
+                        ),
                       ),
                     );
                   },
