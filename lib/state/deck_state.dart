@@ -3,53 +3,51 @@ import 'package:flutter/material.dart';
 import '../services/deck_service.dart';
 import '../models/flashcard.dart';
 
+// ✅ 1. Callback type
+typedef SessionEndCallback = void Function();
+
 class DeckState extends ChangeNotifier {
-  final StudyDeck _deck; // The original deck data
+  final StudyDeck _deck; 
   int _currentCardIndex = 0;
-  
-  // A temporary list to track cards that need review (initially all cards)
-  List<Flashcard> _cardsToReview = []; 
 
-  // Constructor: Takes the deck data and initializes the state
-  DeckState(this._deck) {
-    _cardsToReview = List.from(_deck.cards); // Start with all cards
+  // Cards to review
+  List<Flashcard> _cardsToReview = [];
+
+  // ✅ 2. Callback for session end
+  final SessionEndCallback onSessionEnd;
+
+  // ✅ 3. Updated constructor — callback is required
+  DeckState(this._deck, {required this.onSessionEnd}) {
+    _cardsToReview = List.from(_deck.cards);
   }
-    StudyDeck get deck => _deck;
 
-  // Getters: Publicly expose the state data
+  // Getters
+  StudyDeck get deck => _deck;
   List<Flashcard> get cardsToReview => _cardsToReview;
   int get currentCardIndex => _currentCardIndex;
   Flashcard get currentCard => _cardsToReview[_currentCardIndex];
   bool get isLastCard => _currentCardIndex == _cardsToReview.length - 1;
 
-  // Action: Moves to the next card
+  // ✅ 4. Updated next card logic
   void moveToNextCard() {
     if (!isLastCard) {
       _currentCardIndex++;
-      // Notify all widgets listening to this state that the index changed.
-      notifyListeners(); 
+      notifyListeners();
     } else {
-      // TODO: Handle session end (e.g., navigate to summary screen)
-      print("Session Complete!"); 
+      // 🔥 Trigger the end-of-session callback
+      onSessionEnd();
     }
   }
 
-  // Action: Marks a card as mastered (moves it out of the review list)
+  // Mastered
   void markAsMastered() {
-    // 1. Mark the current card as mastered (using the copyWith method you learned!)
     final masteredCard = currentCard.copyWith(isMastered: true);
-    
-    // 2. Remove the OLD card and insert the NEW mastered card into the list 
-    //    (to show you how to update immutable data in a list).
     _cardsToReview[_currentCardIndex] = masteredCard;
-    
-    // 3. Move to the next card immediately.
     moveToNextCard();
   }
 
-  // Action: Marks a card for review (simply moves to the next card)
+  // Need review
   void markForReview() {
-    // We don't change the card state, just move on
     moveToNextCard();
   }
 }

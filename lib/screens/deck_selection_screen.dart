@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/deck_service.dart';
 import 'study_session_screen.dart';
+import 'summary_screen.dart'; // <-- make sure this path is correct
 import 'package:provider/provider.dart';
-import '../state/deck_state.dart'; // adjust import if needed
+import '../state/deck_state.dart';
 
 class DeckSelectionScreen extends StatelessWidget {
   const DeckSelectionScreen({super.key});
@@ -49,10 +50,34 @@ class DeckSelectionScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (context) => DeckState(deck),
-                          child: StudySessionScreen(),
-                        ),
+                        builder: (context) {
+                          // ----------------------
+                          // Session end logic
+                          // ----------------------
+                          void endSessionLogic() {
+                            final mastered = deck.cards
+                                .where((c) => c.isMastered)
+                                .length;
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SummaryScreen(
+                                  totalCards: deck.cards.length,
+                                  masteredCount: mastered,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ChangeNotifierProvider(
+                            create: (context) => DeckState(
+                              deck,
+                              onSessionEnd: endSessionLogic,
+                            ),
+                            child: const StudySessionScreen(),
+                          );
+                        },
                       ),
                     );
                   },
