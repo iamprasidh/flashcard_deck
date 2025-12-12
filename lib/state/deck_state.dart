@@ -1,6 +1,6 @@
 // lib/state/deck_state.dart
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';       // 🔥 NEW: Hive for persistence
+import 'package:hive/hive.dart';       // Hive for persistence
 import '../services/deck_service.dart';
 import '../models/flashcard.dart';
 
@@ -29,7 +29,13 @@ class DeckState extends ChangeNotifier {
   bool get isLastCard => _currentCardIndex == _cardsToReview.length - 1;
 
   // ----------------------------------------------------------
-  // 🔥 SAVE CARD STATUS TO HIVE
+  // 🔥 NEW: Mastered Count Getter
+  // ----------------------------------------------------------
+  int get masteredCount =>
+      _cardsToReview.where((card) => card.isMastered).length;
+
+  // ----------------------------------------------------------
+  // SAVE CARD STATUS TO HIVE
   // ----------------------------------------------------------
   Future<void> _saveCardStatus(Flashcard card) async {
     final box = await Hive.openBox<Flashcard>('mastery_status');
@@ -55,7 +61,7 @@ class DeckState extends ChangeNotifier {
     final masteredCard = currentCard.copyWith(isMastered: true);
     _cardsToReview[_currentCardIndex] = masteredCard;
 
-    // 🔥 SAVE TO HIVE
+    // Save to Hive
     _saveCardStatus(masteredCard);
 
     moveToNextCard();
@@ -68,7 +74,7 @@ class DeckState extends ChangeNotifier {
     final reviewedCard = currentCard.copyWith(isMastered: false);
     _cardsToReview[_currentCardIndex] = reviewedCard;
 
-    // 🔥 SAVE TO HIVE
+    // Save to Hive
     _saveCardStatus(reviewedCard);
 
     moveToNextCard();
