@@ -20,7 +20,7 @@ class Flashcard {
     );
   }
 
-  Flashcard copywith({
+  Flashcard copyWith({
     String? id,
     String? question,
     String? answer,

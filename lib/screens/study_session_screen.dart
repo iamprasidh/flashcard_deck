@@ -1,55 +1,88 @@
 // lib/screens/study_session_screen.dart
 import 'package:flutter/material.dart';
-import '../services/deck_service.dart'; // Import the StudyDeck model
 import '../models/flashcard.dart';
+import 'package:provider/provider.dart';
+import '../state/deck_state.dart';
 
-// This screen is StatelessWidget because the actual card state will be local to the Flashcard Widget.
 class StudySessionScreen extends StatelessWidget {
-  final StudyDeck deck; // The entire deck is passed in the constructor
-
-  const StudySessionScreen({super.key, required this.deck});
+  const StudySessionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final deckState = Provider.of<DeckState>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(deck.deckName),
-        // Display the card count next to the title
+        title: Text(deckState.deck.deckName), // FIXED: use public getter
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Center(child: Text('Total Cards: ${deck.cards.length}')),
+            child: Center(
+              child: Text(
+                'Card ${deckState.currentCardIndex + 1} of ${deckState.cardsToReview.length}',
+              ),
+            ),
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          // We will use a dedicated widget here that handles the flashcard logic
-          child: FlashcardWidget(
-            flashcard: deck.cards.first, // Just showing the first card for now
-            // TODO: In the next step, we will implement logic to cycle through all cards
+
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+
+            child: FlashcardWidget(
+              key: ValueKey(deckState.currentCard.id),
+              flashcard: deckState.currentCard,
+            ),
           ),
-        ),
+
+          const Spacer(),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+              children: [
+                ElevatedButton(
+                  onPressed: deckState.markForReview,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  child: const Text('Need Review', style: TextStyle(color: Colors.white)),
+                ),
+
+                ElevatedButton(
+                  onPressed: deckState.markAsMastered,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  child: const Text('Mastered', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// ----------------------------------------------------------------------
-// THE CORE WIDGET: FlashcardWidget
-// This is where you will implement the 'flip' state using a StatefulWidget.
+// --------------------------------------------------------------
+// FlashcardWidget
+// --------------------------------------------------------------
+
 class FlashcardWidget extends StatefulWidget {
   final Flashcard flashcard;
 
-  const FlashcardWidget({super.key, required this.flashcard});
+  const FlashcardWidget({
+    super.key,
+    required this.flashcard,
+  });
 
   @override
   State<FlashcardWidget> createState() => _FlashcardWidgetState();
 }
 
 class _FlashcardWidgetState extends State<FlashcardWidget> {
-  bool isAnswerShown = false; // Local state for the flip!
+  bool isAnswerShown = false;
 
   void _toggleAnswer() {
     setState(() {
@@ -60,7 +93,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _toggleAnswer, // Tap the card to flip it
+      onTap: _toggleAnswer,
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -69,17 +102,23 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
           width: double.infinity,
           alignment: Alignment.center,
           padding: const EdgeInsets.all(20),
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+
             children: [
               Text(
-                // Use the local state to determine which text to show
                 isAnswerShown ? "Answer:" : "Question:",
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
+
               const SizedBox(height: 10),
+
               Text(
-                // This is the content that flips
                 isAnswerShown ? widget.flashcard.answer : widget.flashcard.question,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 24),

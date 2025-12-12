@@ -51,7 +51,7 @@ class DeckSelectionScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
                           create: (context) => DeckState(deck),
-                          child: const StudySessionScreen(),
+                          child: StudySessionScreen(),
                         ),
                       ),
                     );

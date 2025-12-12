@@ -14,6 +14,7 @@ class DeckState extends ChangeNotifier {
   DeckState(this._deck) {
     _cardsToReview = List.from(_deck.cards); // Start with all cards
   }
+    StudyDeck get deck => _deck;
 
   // Getters: Publicly expose the state data
   List<Flashcard> get cardsToReview => _cardsToReview;
