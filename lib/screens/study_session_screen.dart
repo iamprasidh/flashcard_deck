@@ -1,6 +1,7 @@
 // lib/screens/study_session_screen.dart
 import 'package:flutter/material.dart';
 import '../services/deck_service.dart'; // Import the StudyDeck model
+import '../models/flashcard.dart';
 
 // This screen is StatelessWidget because the actual card state will be local to the Flashcard Widget.
 class StudySessionScreen extends StatelessWidget {
