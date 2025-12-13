@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/deck_service.dart';
 import 'study_session_screen.dart';
-import 'summary_screen.dart'; // <-- make sure this path is correct
+import 'summary_screen.dart';
 import 'package:provider/provider.dart';
 import '../state/deck_state.dart';
 
@@ -51,30 +51,33 @@ class DeckSelectionScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          // ----------------------
-                          // Session end logic
-                          // ----------------------
-                          void endSessionLogic() {
-                            final mastered = deck.cards
-                                .where((c) => c.isMastered)
-                                .length;
+                          // --------------------------------------------------
+                          // 🔥 STEP 1 — Create DeckState instance FIRST
+                          // --------------------------------------------------
+                          late DeckState deckState;
 
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SummaryScreen(
-                                  totalCards: deck.cards.length,
-                                  masteredCount: mastered,
+                          deckState = DeckState(
+                            deck,
+                            onSessionEnd: () {
+                              final mastered = deckState.masteredCount;
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SummaryScreen(
+                                    totalCards: deck.cards.length,
+                                    masteredCount: mastered,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
+                              );
+                            },
+                          );
 
-                          return ChangeNotifierProvider(
-                            create: (context) => DeckState(
-                              deck,
-                              onSessionEnd: endSessionLogic,
-                            ),
+                          // --------------------------------------------------
+                          // 🔥 STEP 2 — Provide the SAME INSTANCE using .value
+                          // --------------------------------------------------
+                          return ChangeNotifierProvider.value(
+                            value: deckState,
                             child: const StudySessionScreen(),
                           );
                         },
