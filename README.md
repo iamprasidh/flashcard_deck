@@ -1,16 +1,40 @@
-# flashcard_deck
+# Study Cards
 
-A new Flutter project.
+A modern Flutter application for studying with custom flashcard decks. Organize your learning materials into decks and track your progress with an intuitive study interface.
+
+## Features
+
+- Create and manage custom flashcard decks
+- Study sessions with progress tracking
+- Summary view of your learning sessions
+- Data persistence with Hive local storage
+- Clean and intuitive user interface
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is a Flutter application built with the latest Flutter SDK.
 
-A few resources to get you started if this is your first Flutter project:
+To get started with this project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Ensure you have Flutter installed: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
+2. Clone the repository and navigate to the project directory
+3. Run `flutter pub get` to install dependencies
+4. Run `flutter run` to start the application
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+
+- `lib/main.dart` - Main application entry point
+- `lib/models/` - Data models for flashcards
+- `lib/screens/` - UI screens for the application
+- `lib/services/` - Business logic and data services
+- `lib/state/` - State management
+- `assets/` - Application assets including deck data
+
+## Dependencies
+
+- **provider** - State management
+- **hive** - Local data persistence
+- **hive_flutter** - Flutter-specific Hive utilities
+- **cupertino_icons** - iOS-style icons
+
+For more information about Flutter development, see the [Flutter Documentation](https://docs.flutter.dev/).
